@@ -29,11 +29,6 @@ export default {
     finishTitle: 'One more thing',
     signedInAs: "Signed in as {'@'}{handle}",
   },
-  home: {
-    signedInAs: 'Signed in as {label}',
-    nextSteps:
-      'Start building on top of the auth in server/domain/user and the FSD layers in app/ and server/.',
-  },
   validation: {
     nameRequired: 'Name is required',
     nameTooLong: 'Name must be 80 characters or fewer',

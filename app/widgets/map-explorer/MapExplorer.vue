@@ -1,7 +1,7 @@
 <template>
   <div class="relative h-screen w-screen">
     <ClientOnly>
-      <MapCanvas />
+      <MapCanvas @ready="(m) => (map = m)" />
     </ClientOnly>
 
     <header
@@ -16,12 +16,43 @@
         <SignOutButton />
       </div>
     </header>
+
+    <div
+      class="pointer-events-auto absolute left-4 top-20 w-80 rounded-lg bg-default/90 backdrop-blur p-4 shadow sm:left-6 lg:left-8"
+    >
+      <FindRouteForm
+        :pending="pending"
+        :error="error"
+        :routes="routes"
+        :selected-index="selectedIndex"
+        @submit="onSubmit"
+        @select="(i) => (selectedIndex = i)"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Map as MapLibreMap } from 'maplibre-gl'
+import type { RouteRequestPoint } from '#shared/entities/routing'
+import { useRouteLayer } from '~/entities/route'
 import { MapCanvas } from '~/entities/map'
+import { FindRouteForm, useFindRoute } from '~/features/route/find-route'
 import { SignOutButton } from '~/features/user/sign-out'
 
 const { t } = useI18n()
+
+const map = shallowRef<MapLibreMap>()
+const { routes, selectedIndex, pending, error, submit } = useFindRoute()
+const { fitToRoutes } = useRouteLayer(
+  map,
+  routes,
+  selectedIndex,
+  (i) => (selectedIndex.value = i),
+)
+
+const onSubmit = async (origin: RouteRequestPoint, destination: RouteRequestPoint) => {
+  await submit(origin, destination)
+  if (routes.value.length > 0) fitToRoutes()
+}
 </script>

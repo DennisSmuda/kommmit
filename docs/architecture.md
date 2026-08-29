@@ -41,7 +41,10 @@ them as `features/<noun>/<verb>`, and the screens that compose them as
 A slice only earns a `server/domain/` directory once it has rules worth unit
 testing without spinning up Nitro — see `server/domain/user/*.spec.ts` and
 `shared/entities/user/name.spec.ts` for the pattern: pure functions in,
-`createError`s or plain values out.
+`createError`s or plain values out. `server/domain/routing/` is a second
+worked example — graph building, A* pathfinding and the bike-cost weighting
+rules all as pure, unit-tested functions, with `server/utils/overpass.ts`
+and `server/utils/nominatim.ts` as its outbound-HTTP infra.
 
 ## Rule of thumb
 

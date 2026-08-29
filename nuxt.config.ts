@@ -39,6 +39,15 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
 
+  vite: {
+    optimizeDeps: {
+      // maplibre-gl loads its own worker via a `new URL(...)` reference that
+      // Vite's dep pre-bundler mishandles (the bundled worker chunk 404s),
+      // so it's served as-is instead of pre-bundled.
+      exclude: ['maplibre-gl'],
+    },
+  },
+
   nitro: {
     // @atproto-labs/fetch-node depends on npm-aliased packages (undici_v6/v7/v8).
     // Nitro's node_modules tracer/copy step drops the alias and collides

@@ -20,6 +20,8 @@ const props = withDefaults(
   },
 )
 
+const emit = defineEmits<{ ready: [map: MapLibreMap] }>()
+
 const container = ref<HTMLDivElement>()
 let map: MapLibreMap | undefined
 
@@ -32,6 +34,8 @@ onMounted(() => {
     attributionControl: { compact: true },
   })
   map.addControl(new NavigationControl(), 'top-right')
+  // Layers/sources can't be added before the style finishes loading.
+  map.on('load', () => emit('ready', map!))
 })
 
 onBeforeUnmount(() => {

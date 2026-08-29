@@ -54,9 +54,18 @@ pnpm test:e2e              # playwright test
 ## Architecture
 
 Feature-Sliced Design — see [`docs/architecture.md`](docs/architecture.md).
-The `user` slice (auth, AT Protocol sign-in) is a worked example through
-every layer; `entities/`, `features/` and `widgets/` are otherwise empty,
+The `user` slice (auth, AT Protocol sign-in) and the `routing` slice
+(bike-preferring route finding) are worked examples through every layer;
+the rest of `entities/`, `features/` and `widgets/` is otherwise empty,
 ready for your own domain.
+
+Route finding is self-built rather than a third-party routing API: an
+in-memory graph + A* pathfinder over road/cycleway data fetched on demand
+from the public Overpass API, weighted to prefer bike infrastructure, with
+addresses geocoded via the public Nominatim API. Neither needs an API key or
+env var, but both are shared community infrastructure with fair-use limits —
+requests are capped to a ~15 km straight-line distance between the two
+points accordingly.
 
 ## Production
 

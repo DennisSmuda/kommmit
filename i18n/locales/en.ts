@@ -39,6 +39,9 @@ export default {
     duration: '{duration} min',
     recommended: 'Recommended',
     alternative: 'Alternative {n}',
+    ascent: '↑ {value} m',
+    descent: '↓ {value} m',
+    elevation: '{value} m',
   },
   validation: {
     nameRequired: 'Name is required',
@@ -66,5 +69,6 @@ export default {
     noNearbyRoad: 'We could not find a road near one of those points',
     noRouteFound: 'No bike-friendly route could be found between those points',
     routePointsRequired: 'A start and end point are required',
+    elevationUnavailable: 'Elevation data is unavailable right now.',
   },
 }

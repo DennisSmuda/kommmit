@@ -6,5 +6,7 @@ export type {
   RouteResult,
   RouteSearchResult,
   GeocodeCandidate,
+  ElevationSample,
+  ElevationProfile,
 } from './types'
 export { isLatLng, isRoutePoint } from './point'

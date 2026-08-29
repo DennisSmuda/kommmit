@@ -42,9 +42,10 @@ A slice only earns a `server/domain/` directory once it has rules worth unit
 testing without spinning up Nitro — see `server/domain/user/*.spec.ts` and
 `shared/entities/user/name.spec.ts` for the pattern: pure functions in,
 `createError`s or plain values out. `server/domain/routing/` is a second
-worked example — graph building, A* pathfinding and the bike-cost weighting
-rules all as pure, unit-tested functions, with `server/utils/overpass.ts`
-and `server/utils/nominatim.ts` as its outbound-HTTP infra.
+worked example — graph building, A* pathfinding, the bike-cost weighting
+rules and elevation-profile resampling all as pure, unit-tested functions,
+with `server/utils/overpass.ts`, `server/utils/nominatim.ts` and
+`server/utils/open-elevation.ts` as its outbound-HTTP infra.
 
 ## Rule of thumb
 

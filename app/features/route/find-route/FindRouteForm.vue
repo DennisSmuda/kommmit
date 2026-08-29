@@ -81,6 +81,18 @@
       </button>
     </div>
 
+    <ElevationChart
+      v-if="elevationProfile"
+      :profile="elevationProfile"
+      @hover="(point) => emit('hover', point)"
+    />
+    <p
+      v-else-if="elevationError"
+      class="text-xs text-dimmed"
+    >
+      {{ elevationError }}
+    </p>
+
     <UButton
       type="submit"
       block
@@ -97,12 +109,15 @@
 <script setup lang="ts">
 import type {
   GeocodeCandidate,
+  LatLng,
   RouteRequestPoint,
   RouteResult,
 } from '#shared/entities/routing'
+import { ElevationChart } from '~/entities/route'
 import { useAddressAutocomplete } from './useAddressAutocomplete'
+import { useElevationProfile } from './useElevationProfile'
 
-defineProps<{
+const props = defineProps<{
   pending: boolean
   error: string
   routes: RouteResult[]
@@ -112,9 +127,14 @@ defineProps<{
 const emit = defineEmits<{
   submit: [origin: RouteRequestPoint, destination: RouteRequestPoint]
   select: [index: number]
+  hover: [point: LatLng | null]
 }>()
 
 const { t } = useI18n()
+
+const selectedPath = computed(() => props.routes[props.selectedIndex]?.path ?? null)
+const { profile: elevationProfile, error: elevationError } =
+  useElevationProfile(selectedPath)
 
 const {
   query: originQuery,

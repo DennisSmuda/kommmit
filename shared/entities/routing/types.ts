@@ -26,3 +26,18 @@ export interface GeocodeCandidate {
   lat: number
   lng: number
 }
+
+export interface ElevationSample {
+  lat: number
+  lng: number
+  distanceMeters: number
+  elevationMeters: number
+}
+
+export interface ElevationProfile {
+  samples: ElevationSample[]
+  ascentMeters: number
+  descentMeters: number
+  minElevationMeters: number
+  maxElevationMeters: number
+}

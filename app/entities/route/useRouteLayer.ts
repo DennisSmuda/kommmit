@@ -1,25 +1,40 @@
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from 'maplibre-gl'
 import { Marker } from 'maplibre-gl'
-import type { RouteResult } from '#shared/entities/routing'
+import type { LatLng, RouteResult } from '#shared/entities/routing'
 import { routesToGeoJSON } from './geojson'
 
 const SOURCE_ID = 'route-lines'
 const LAYER_ID = 'route-lines-layer'
+
+function createHoverElement(): HTMLDivElement {
+  const el = document.createElement('div')
+  el.style.width = '12px'
+  el.style.height = '12px'
+  el.style.borderRadius = '50%'
+  el.style.background = '#2563eb'
+  el.style.border = '2px solid white'
+  el.style.boxShadow = '0 0 0 1px rgba(0,0,0,0.15)'
+  return el
+}
 
 /**
  * Draws every route in `routes` as a line (the one at `selectedIndex`
  * highlighted), start/end markers for the shared origin/destination, and
  * removes it all when `routes` goes empty. Clicking an unselected line calls
  * `onSelect` with its index — the map is itself a picker, not just a display.
+ * `hoverPoint` (e.g. from hovering the elevation chart) shows/moves a small
+ * dot independently of the route redraw, since it changes on every mousemove.
  */
 export function useRouteLayer(
   map: Ref<MapLibreMap | undefined>,
   routes: Ref<RouteResult[]>,
   selectedIndex: Ref<number>,
   onSelect: (index: number) => void,
+  hoverPoint: Ref<LatLng | null>,
 ) {
   let startMarker: Marker | undefined
   let endMarker: Marker | undefined
+  let hoverMarker: Marker | undefined
 
   const clearMarkers = () => {
     startMarker?.remove()
@@ -90,6 +105,27 @@ export function useRouteLayer(
         .addTo(currentMap)
   }
 
+  const renderHover = () => {
+    const currentMap = map.value
+    const point = hoverPoint.value
+
+    if (!currentMap || !point) {
+      hoverMarker?.remove()
+      hoverMarker = undefined
+      return
+    }
+
+    if (!hoverMarker) {
+      // `setLngLat` before `addTo` — addTo positions the element immediately
+      // using whatever lngLat is already set, which is undefined otherwise.
+      hoverMarker = new Marker({ element: createHoverElement() })
+        .setLngLat([point.lng, point.lat])
+        .addTo(currentMap)
+    } else {
+      hoverMarker.setLngLat([point.lng, point.lat])
+    }
+  }
+
   const fitToRoutes = () => {
     const currentMap = map.value
     if (!currentMap || routes.value.length === 0) return
@@ -107,8 +143,10 @@ export function useRouteLayer(
   }
 
   watch([map, routes, selectedIndex], render, { immediate: true })
+  watch([map, hoverPoint], renderHover)
   onScopeDispose(() => {
     clearMarkers()
+    hoverMarker?.remove()
     if (map.value) removeLayer(map.value)
   })
 

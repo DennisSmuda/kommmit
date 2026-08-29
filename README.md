@@ -62,10 +62,11 @@ ready for your own domain.
 Route finding is self-built rather than a third-party routing API: an
 in-memory graph + A* pathfinder over road/cycleway data fetched on demand
 from the public Overpass API, weighted to prefer bike infrastructure, with
-addresses geocoded via the public Nominatim API. Neither needs an API key or
-env var, but both are shared community infrastructure with fair-use limits —
-requests are capped to a ~15 km straight-line distance between the two
-points accordingly.
+addresses geocoded via the public Nominatim API and elevation profiles from
+the public Open-Elevation API. None of the three need an API key or env var,
+but all three are shared community infrastructure with fair-use limits —
+route requests are capped to a ~100 km straight-line distance between the
+two points accordingly.
 
 ## Production
 

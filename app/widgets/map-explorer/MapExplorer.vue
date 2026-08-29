@@ -27,6 +27,7 @@
         :selected-index="selectedIndex"
         @submit="onSubmit"
         @select="(i) => (selectedIndex = i)"
+        @hover="(point) => (hoverPoint = point)"
       />
     </div>
   </div>
@@ -34,7 +35,7 @@
 
 <script setup lang="ts">
 import type { Map as MapLibreMap } from 'maplibre-gl'
-import type { RouteRequestPoint } from '#shared/entities/routing'
+import type { LatLng, RouteRequestPoint } from '#shared/entities/routing'
 import { useRouteLayer } from '~/entities/route'
 import { MapCanvas } from '~/entities/map'
 import { FindRouteForm, useFindRoute } from '~/features/route/find-route'
@@ -44,11 +45,13 @@ const { t } = useI18n()
 
 const map = shallowRef<MapLibreMap>()
 const { routes, selectedIndex, pending, error, submit } = useFindRoute()
+const hoverPoint = ref<LatLng | null>(null)
 const { fitToRoutes } = useRouteLayer(
   map,
   routes,
   selectedIndex,
   (i) => (selectedIndex.value = i),
+  hoverPoint,
 )
 
 const onSubmit = async (origin: RouteRequestPoint, destination: RouteRequestPoint) => {

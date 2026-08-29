@@ -7,6 +7,7 @@ import type {
 import { isLatLng } from '#shared/entities/routing'
 import { fetchOverpassData } from '../../utils/overpass'
 import { findAlternateRoutes } from './alternate-routes'
+import { findFlattestPath } from './flattest-route'
 import { searchAddress } from './geocode'
 import { boundingBox, haversineMeters } from './geo'
 import { buildGraph, nearestNode, type Graph } from './graph'
@@ -34,7 +35,7 @@ async function resolvePoint(point: LatLng | string): Promise<LatLng> {
   return { lat: candidate.lat, lng: candidate.lng }
 }
 
-function toRouteResult(graph: Graph, path: number[]): RouteResult {
+function toRouteResult(graph: Graph, path: number[]): Omit<RouteResult, 'kind'> {
   let distanceMeters = 0
   for (let i = 0; i < path.length - 1; i++) {
     const edge = graph.adjacency.get(path[i]!)!.find((e) => e.to === path[i + 1])!
@@ -78,6 +79,10 @@ export async function findRoute(request: RouteRequest): Promise<RouteSearchResul
     throw createError({ statusCode: 404, statusMessage: 'errors.noNearbyRoad' })
   }
 
+  // Kicked off now (not awaited yet) so its elevation fetch overlaps with the
+  // synchronous bike-route search below instead of adding pure serial latency.
+  const flattestPathPromise = findFlattestPath(graph, startNode, goalNode, destination)
+
   // Every edge's weight is realDistance * multiplier, and every multiplier is >=
   // MIN_MULTIPLIER, so realDistance * MIN_MULTIPLIER never overestimates the true
   // remaining cost to the goal (triangle inequality bounds realDistance itself by
@@ -94,12 +99,22 @@ export async function findRoute(request: RouteRequest): Promise<RouteSearchResul
       weight: edge.weight,
     }))
 
-  const results = findAlternateRoutes(startNode, goalNode, neighbors, heuristic, {
+  const bikeResults = findAlternateRoutes(startNode, goalNode, neighbors, heuristic, {
     maxRoutes: MAX_ROUTES,
   })
-  if (results.length === 0) {
+  if (bikeResults.length === 0) {
     throw createError({ statusCode: 404, statusMessage: 'errors.noRouteFound' })
   }
 
-  return { routes: results.map((result) => toRouteResult(graph, result.path)) }
+  const routes: RouteResult[] = bikeResults.map((result, index) => ({
+    kind: index === 0 ? 'recommended' : 'alternative',
+    ...toRouteResult(graph, result.path),
+  }))
+
+  const flattestPath = await flattestPathPromise
+  if (flattestPath) {
+    routes.push({ kind: 'flattest', ...toRouteResult(graph, flattestPath) })
+  }
+
+  return { routes }
 }

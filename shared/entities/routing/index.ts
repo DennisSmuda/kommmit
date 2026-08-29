@@ -4,6 +4,7 @@ export type {
   RouteRequest,
   RouteRequestPoint,
   RouteResult,
+  RouteKind,
   RouteSearchResult,
   GeocodeCandidate,
   ElevationSample,

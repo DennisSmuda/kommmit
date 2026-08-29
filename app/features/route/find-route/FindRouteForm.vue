@@ -62,11 +62,7 @@
         @click="emit('select', index)"
       >
         <span class="font-medium">
-          {{
-            index === 0
-              ? t('routing.recommended')
-              : t('routing.alternative', { n: index })
-          }}
+          {{ routeLabels[index] }}
         </span>
         <span class="text-dimmed">
           &middot;
@@ -131,6 +127,18 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+// "Alternative N" numbers only the alternates, so a flattest route slotted
+// in after them doesn't skip a number or get mislabeled itself.
+const routeLabels = computed(() => {
+  let alternativeCount = 0
+  return props.routes.map((route) => {
+    if (route.kind === 'recommended') return t('routing.recommended')
+    if (route.kind === 'flattest') return t('routing.flattest')
+    alternativeCount++
+    return t('routing.alternative', { n: alternativeCount })
+  })
+})
 
 const selectedPath = computed(() => props.routes[props.selectedIndex]?.path ?? null)
 const { profile: elevationProfile, error: elevationError } =

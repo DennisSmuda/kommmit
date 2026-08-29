@@ -39,6 +39,7 @@ export default {
     duration: '{duration} min',
     recommended: 'Recommended',
     alternative: 'Alternative {n}',
+    flattest: 'Flattest',
     ascent: '↑ {value} m',
     descent: '↓ {value} m',
     elevation: '{value} m',

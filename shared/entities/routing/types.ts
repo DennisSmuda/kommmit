@@ -10,13 +10,21 @@ export interface RouteRequest {
   destination: RouteRequestPoint
 }
 
+/**
+ * `recommended` is always `routes[0]`. `alternative` routes are other
+ * bike-friendly corridors, cheapest first. `flattest` (at most one, always
+ * last when present) minimizes total climb instead, independent of the
+ * others — it may reuse the same roads.
+ */
+export type RouteKind = 'recommended' | 'alternative' | 'flattest'
+
 export interface RouteResult {
+  kind: RouteKind
   path: LatLng[]
   distanceMeters: number
   durationSeconds: number
 }
 
-/** `routes[0]` is the primary recommendation; the rest are alternates, cheapest first, when the graph had distinct corridors to offer. */
 export interface RouteSearchResult {
   routes: RouteResult[]
 }

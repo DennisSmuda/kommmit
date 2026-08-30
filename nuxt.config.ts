@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   // nothing reads it back from.
   devServer: {
     host: '127.0.0.1',
-    port: 3000,
+    port: process.env.NODE_ENV === 'production' ? 3001 : 3000,
   },
   modules: ['@sidebase/nuxt-auth', '@nuxt/ui', '@nuxtjs/i18n'],
   i18n: {

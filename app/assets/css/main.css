@@ -1,2 +1,12 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
+
+@theme static {
+  /* Archivo, loaded in nuxt.config.ts — one bold display face carries both
+     body text and headlines, same as the reference design. */
+  --font-sans: 'Archivo', sans-serif;
+  --font-display: 'Archivo', sans-serif;
+  /* A little more generous than Nuxt UI's default 0.25rem, for the
+     rounder, warmer shape language in the reference design. */
+  --ui-radius: 0.5rem;
+}

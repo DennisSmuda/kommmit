@@ -36,7 +36,7 @@
       type="submit"
       block
       size="lg"
-      color="neutral"
+      color="primary"
       :loading="pending"
       :disabled="pending || !handle.trim()"
     >

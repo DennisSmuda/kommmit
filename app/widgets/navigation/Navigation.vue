@@ -132,6 +132,10 @@ import { useRouteLayer } from '~/entities/route'
 import { useFindRoute } from '~/features/route/find-route'
 import { useActiveNavigationRoute, useLiveLocation } from '~/features/route/navigate'
 
+// maplibre paint/marker colors can't read CSS custom properties, so the
+// theme's stone ink (app.config.ts) is hardcoded here too — the rider's own
+// position is ink, not the orange accent reserved for the route/destination.
+const LIVE_MARKER_COLOR = '#1c1917'
 const ARRIVAL_THRESHOLD_METERS = 25
 // Comfortably past GPS jitter, so a stationary fix near the route doesn't
 // flicker the guide line in and out.
@@ -241,7 +245,7 @@ watch(location, (loc) => {
   if (!loc || !currentMap) return
 
   if (!liveMarker) {
-    liveMarker = new Marker({ color: '#2563eb' })
+    liveMarker = new Marker({ color: LIVE_MARKER_COLOR })
       .setLngLat([loc.position.lng, loc.position.lat])
       .addTo(currentMap)
   } else {

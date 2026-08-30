@@ -1,7 +1,7 @@
 <template>
   <div
     ref="container"
-    class="h-full w-full"
+    class="h-full w-full bg-[#edf0ea]"
   />
 </template>
 

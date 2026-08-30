@@ -45,8 +45,7 @@
       type="button"
       block
       size="lg"
-      color="neutral"
-      variant="soft"
+      color="primary"
       icon="i-lucide-navigation"
       @click="
         emit(

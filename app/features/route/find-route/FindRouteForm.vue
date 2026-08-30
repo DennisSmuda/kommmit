@@ -43,7 +43,7 @@
         type="submit"
         block
         size="lg"
-        color="neutral"
+        color="primary"
         :loading="pending"
         :disabled="pending || !hasOrigin || !hasDestination"
       >
@@ -121,8 +121,7 @@
           type="button"
           block
           size="lg"
-          color="neutral"
-          variant="soft"
+          color="primary"
           icon="i-lucide-navigation"
           class="flex-1"
           @click="emit('navigate', selectedRoute, originLabel, destinationLabel)"

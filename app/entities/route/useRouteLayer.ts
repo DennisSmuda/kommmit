@@ -6,12 +6,18 @@ import { routesToGeoJSON } from './geojson'
 const SOURCE_ID = 'route-lines'
 const LAYER_ID = 'route-lines-layer'
 
+// maplibre paint expressions can't read CSS custom properties, so the
+// theme's orange/stone accents (app.config.ts) are hardcoded here too.
+const ROUTE_ACCENT = '#f97316' // orange-500 — primary color, matches the destination pin
+const ROUTE_ALTERNATE = '#a8a29e' // stone-400 — an unselected alternative
+const START_MARKER = '#1c1917' // stone-900 — the origin, not the goal, so it isn't the accent
+
 function createHoverElement(): HTMLDivElement {
   const el = document.createElement('div')
   el.style.width = '12px'
   el.style.height = '12px'
   el.style.borderRadius = '50%'
-  el.style.background = '#2563eb'
+  el.style.background = ROUTE_ACCENT
   el.style.border = '2px solid white'
   el.style.boxShadow = '0 0 0 1px rgba(0,0,0,0.15)'
   return el
@@ -79,7 +85,7 @@ export function useRouteLayer(
         source: SOURCE_ID,
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': ['case', ['get', 'selected'], '#2563eb', '#94a3b8'],
+          'line-color': ['case', ['get', 'selected'], ROUTE_ACCENT, ROUTE_ALTERNATE],
           'line-width': ['case', ['get', 'selected'], 5, 3],
         },
       })
@@ -96,11 +102,11 @@ export function useRouteLayer(
     const path = routes.value[0]!.path
     const [start, end] = [path.at(0), path.at(-1)]
     if (start)
-      startMarker = new Marker({ color: '#16a34a' })
+      startMarker = new Marker({ color: START_MARKER })
         .setLngLat([start.lng, start.lat])
         .addTo(currentMap)
     if (end)
-      endMarker = new Marker({ color: '#dc2626' })
+      endMarker = new Marker({ color: ROUTE_ACCENT })
         .setLngLat([end.lng, end.lat])
         .addTo(currentMap)
   }

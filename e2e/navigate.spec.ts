@@ -98,6 +98,99 @@ test('a shared /navigate?routeId= link opens live navigation on a fresh visit', 
   await expect(page.getByText('Origin St → Destination Ave')).toBeVisible()
 })
 
+test('drifting off the route shows the off-route guide', async ({ context, page }) => {
+  await signInAs(context, SEED_USERS[0])
+  await context.grantPermissions(['geolocation'])
+  // Well off the path below, which runs due north around lng 13.405-13.407.
+  await context.setGeolocation({ latitude: 52.521, longitude: 13.42 })
+
+  await page.route('**/api/routing/saved-routes/*', async (route) => {
+    await route.fulfill({
+      json: {
+        id: 'fake-route',
+        name: 'Commute',
+        originLabel: 'Origin St',
+        destinationLabel: 'Destination Ave',
+        route: {
+          kind: 'recommended',
+          path: [
+            { lat: 52.52, lng: 13.405 },
+            { lat: 52.521, lng: 13.406 },
+            { lat: 52.522, lng: 13.407 },
+          ],
+          distanceMeters: 500,
+          durationSeconds: 120,
+        },
+      },
+    })
+  })
+
+  await page.goto('/navigate?routeId=fake-route')
+
+  await expect(page.getByText(/off route — follow the red line back/)).toBeVisible()
+})
+
+test('"Get back on track" fetches a routed path back to the route', async ({
+  context,
+  page,
+}) => {
+  await signInAs(context, SEED_USERS[0])
+  await context.grantPermissions(['geolocation'])
+  await context.setGeolocation({ latitude: 52.521, longitude: 13.42 })
+
+  await page.route('**/api/routing/saved-routes/*', async (route) => {
+    await route.fulfill({
+      json: {
+        id: 'fake-route',
+        name: 'Commute',
+        originLabel: 'Origin St',
+        destinationLabel: 'Destination Ave',
+        route: {
+          kind: 'recommended',
+          path: [
+            { lat: 52.52, lng: 13.405 },
+            { lat: 52.521, lng: 13.406 },
+            { lat: 52.522, lng: 13.407 },
+          ],
+          distanceMeters: 500,
+          durationSeconds: 120,
+        },
+      },
+    })
+  })
+
+  let findRouteCalls = 0
+  await page.route('**/api/routing/find-route', async (route) => {
+    findRouteCalls++
+    await route.fulfill({
+      json: {
+        routes: [
+          {
+            kind: 'recommended',
+            path: [
+              { lat: 52.521, lng: 13.42 },
+              { lat: 52.5215, lng: 13.415 },
+              { lat: 52.522, lng: 13.407 },
+            ],
+            distanceMeters: 900,
+            durationSeconds: 200,
+          },
+        ],
+      },
+    })
+  })
+
+  await page.goto('/navigate?routeId=fake-route')
+  await expect(page.getByRole('button', { name: 'Get back on track' })).toBeVisible()
+
+  await Promise.all([
+    page.waitForResponse('**/api/routing/find-route'),
+    page.getByRole('button', { name: 'Get back on track' }).click(),
+  ])
+
+  expect(findRouteCalls).toBe(1)
+})
+
 test('a /navigate?routeId= link for a route that fails to load falls back to the map', async ({
   context,
   page,

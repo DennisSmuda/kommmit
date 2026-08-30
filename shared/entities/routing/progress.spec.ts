@@ -42,4 +42,14 @@ describe('computeRouteProgress', () => {
     const offPath = computeRouteProgress(path, { lat: 0.003, lng: 0.001 })!
     expect(offPath.remainingMeters).toBeGreaterThan(onPath.remainingMeters)
   })
+
+  it('reports zero deviation exactly on the path', () => {
+    const progress = computeRouteProgress(path, { lat: 0.001, lng: 0 })!
+    expect(progress.deviationMeters).toBe(0)
+  })
+
+  it('reports the distance to the nearest vertex when off the path', () => {
+    const progress = computeRouteProgress(path, { lat: 0.001, lng: 0.001 })!
+    expect(progress.deviationMeters).toBeGreaterThan(0)
+  })
 })

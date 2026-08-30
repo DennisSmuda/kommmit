@@ -62,6 +62,8 @@ export default {
     finish: 'Finish',
     stop: 'Stop navigation',
     recenter: 'Recenter',
+    offRoute: "You're {distance} m off route — follow the red line back",
+    getBackOnTrack: 'Get back on track',
   },
   savedRoutes: {
     title: 'My Routes',

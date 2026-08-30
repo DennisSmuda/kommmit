@@ -3,6 +3,8 @@ import { haversineMeters } from './geo'
 
 export interface RouteProgress {
   nearestIndex: number
+  /** Distance from `position` to `path[nearestIndex]` — how far off the route it is. */
+  deviationMeters: number
   traveledMeters: number
   remainingMeters: number
   fractionComplete: number
@@ -43,5 +45,11 @@ export function computeRouteProgress(
   const totalMeters = traveledMeters + remainingMeters
   const fractionComplete = totalMeters > 0 ? traveledMeters / totalMeters : 0
 
-  return { nearestIndex, traveledMeters, remainingMeters, fractionComplete }
+  return {
+    nearestIndex,
+    deviationMeters: nearestDistance,
+    traveledMeters,
+    remainingMeters,
+    fractionComplete,
+  }
 }

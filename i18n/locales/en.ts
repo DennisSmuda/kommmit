@@ -59,6 +59,7 @@ export default {
     empty: 'No saved routes yet',
     backToMap: 'Back to map',
     savedOn: 'Saved {date}',
+    exportGpx: 'Export GPX',
   },
   validation: {
     nameRequired: 'Name is required',

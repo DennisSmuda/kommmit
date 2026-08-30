@@ -62,13 +62,38 @@
               </p>
             </div>
             <div class="shrink-0 text-right text-sm text-toned">
-              <p>{{ t('routing.distance', { distance: (route.distanceMeters / 1000).toFixed(1) }) }}</p>
-              <p>{{ t('routing.duration', { duration: Math.round(route.durationSeconds / 60) }) }}</p>
+              <p>
+                {{
+                  t('routing.distance', {
+                    distance: (route.distanceMeters / 1000).toFixed(1),
+                  })
+                }}
+              </p>
+              <p>
+                {{
+                  t('routing.duration', {
+                    duration: Math.round(route.durationSeconds / 60),
+                  })
+                }}
+              </p>
               <p class="text-xs text-muted">
                 {{ t('routing.ascent', { value: Math.round(route.ascentMeters) }) }}
                 {{ t('routing.descent', { value: Math.round(route.descentMeters) }) }}
               </p>
             </div>
+          </div>
+          <div class="mt-3 flex justify-end border-t border-default pt-3">
+            <UButton
+              :href="`/api/routing/saved-routes/${route.id}/gpx`"
+              external
+              download
+              variant="ghost"
+              color="neutral"
+              size="xs"
+              icon="i-lucide-download"
+            >
+              {{ t('savedRoutes.exportGpx') }}
+            </UButton>
           </div>
         </UCard>
       </li>

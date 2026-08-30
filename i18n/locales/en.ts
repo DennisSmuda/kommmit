@@ -5,6 +5,7 @@ export default {
       login: 'Log In',
       atmosphereSignIn: 'Signing In',
       atmosphereRegister: 'Finish Signing Up',
+      routes: 'My Routes',
     },
   },
   common: {
@@ -47,6 +48,17 @@ export default {
     save: 'Save route',
     saved: 'Saved',
     navigate: 'Navigate',
+    alternativeGeneric: 'Alternative',
+    saveDialogTitle: 'Name this route',
+    saveDialogNameLabel: 'Name',
+    saveDialogNamePlaceholder: 'e.g. Commute, Way to Max',
+    saveDialogCancel: 'Cancel',
+  },
+  savedRoutes: {
+    title: 'My Routes',
+    empty: 'No saved routes yet',
+    backToMap: 'Back to map',
+    savedOn: 'Saved {date}',
   },
   validation: {
     nameRequired: 'Name is required',
@@ -77,5 +89,6 @@ export default {
     elevationUnavailable: 'Elevation data is unavailable right now.',
     saveRouteInvalid: 'A route to save is required',
     saveRouteFailed: 'Could not save this route. Please try again.',
+    loadSavedRoutesFailed: 'Could not load your saved routes. Please try again.',
   },
 }

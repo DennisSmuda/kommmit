@@ -15,6 +15,8 @@ export function useSaveRoute() {
 
   const save = async (params: {
     name: string
+    originLabel: string
+    destinationLabel: string
     route: RouteResult
     elevationProfile: ElevationProfile
   }) => {
@@ -26,6 +28,8 @@ export function useSaveRoute() {
         method: 'POST',
         body: {
           name: params.name,
+          originLabel: params.originLabel,
+          destinationLabel: params.destinationLabel,
           route: {
             kind: params.route.kind,
             distanceMeters: params.route.distanceMeters,

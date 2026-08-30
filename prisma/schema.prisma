@@ -26,19 +26,26 @@ model User {
 }
 
 // A route a user chose to keep, stored as GPX so a future export endpoint
-// just serves `gpx` back verbatim. `name`/`kind`/`distanceMeters`/
-// `durationSeconds` are duplicated out as columns so a future list view
-// doesn't need to parse XML to render itself.
+// just serves `gpx` back verbatim. Everything else is duplicated out as
+// columns so a list view doesn't need to parse XML to render itself.
+// `originLabel`/`destinationLabel` are the addresses as the user searched
+// them, not necessarily geocodable again the same way.
 model SavedRoute {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name            String
-  kind            String
-  distanceMeters  Float
-  durationSeconds Float
-  gpx             String
-  createdAt       DateTime @default(now())
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name               String
+  originLabel        String
+  destinationLabel   String
+  kind               String
+  distanceMeters     Float
+  durationSeconds    Float
+  ascentMeters       Float
+  descentMeters      Float
+  minElevationMeters Float
+  maxElevationMeters Float
+  gpx                String
+  createdAt          DateTime @default(now())
 }
 
 // Backing for the two key/value stores `@atproto/oauth-client-node` requires.

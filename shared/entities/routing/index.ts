@@ -11,5 +11,7 @@ export type {
   ElevationProfile,
   SaveRouteRequest,
   SaveRouteResult,
+  SavedRouteSummary,
+  ListSavedRoutesResult,
 } from './types'
 export { isLatLng, isRoutePoint } from './point'

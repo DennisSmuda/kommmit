@@ -52,10 +52,31 @@ export interface ElevationProfile {
 
 export interface SaveRouteRequest {
   name: string
+  originLabel: string
+  destinationLabel: string
   route: Pick<RouteResult, 'kind' | 'distanceMeters' | 'durationSeconds'>
   elevationProfile: ElevationProfile
 }
 
 export interface SaveRouteResult {
   id: string
+}
+
+export interface SavedRouteSummary {
+  id: string
+  name: string
+  originLabel: string
+  destinationLabel: string
+  kind: RouteKind
+  distanceMeters: number
+  durationSeconds: number
+  ascentMeters: number
+  descentMeters: number
+  minElevationMeters: number
+  maxElevationMeters: number
+  createdAt: string
+}
+
+export interface ListSavedRoutesResult {
+  routes: SavedRouteSummary[]
 }

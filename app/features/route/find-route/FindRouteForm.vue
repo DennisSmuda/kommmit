@@ -113,7 +113,8 @@
         <SaveRouteButton
           :route="selectedRoute"
           :elevation-profile="elevationProfile"
-          :name="routeName"
+          :origin-label="originLabel"
+          :destination-label="destinationLabel"
           class="flex-1"
         />
         <UButton
@@ -211,11 +212,10 @@ const hasDestination = computed(() =>
   Boolean(destinationSelected.value || destinationQuery.value.trim()),
 )
 
-const routeName = computed(() => {
-  const origin = originSelected.value?.label ?? originQuery.value.trim()
-  const destination = destinationSelected.value?.label ?? destinationQuery.value.trim()
-  return `${origin} → ${destination}`
-})
+const originLabel = computed(() => originSelected.value?.label ?? originQuery.value.trim())
+const destinationLabel = computed(
+  () => destinationSelected.value?.label ?? destinationQuery.value.trim(),
+)
 
 const submit = () => {
   const origin: RouteRequestPoint = originSelected.value

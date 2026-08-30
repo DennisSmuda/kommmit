@@ -12,7 +12,17 @@
       >
         {{ t('meta.title.home') }}
       </p>
-      <div class="pointer-events-auto rounded-lg bg-default/90 backdrop-blur shadow">
+      <div
+        class="pointer-events-auto flex items-center gap-2 rounded-lg bg-default/90 backdrop-blur shadow"
+      >
+        <UButton
+          to="/routes"
+          variant="ghost"
+          color="neutral"
+          icon="i-lucide-list"
+        >
+          {{ t('meta.title.routes') }}
+        </UButton>
         <SignOutButton />
       </div>
     </header>

@@ -81,29 +81,37 @@
       </p>
     </div>
   </div>
+  <div
+    v-else-if="resolving"
+    class="flex h-screen w-screen items-center justify-center bg-default"
+  >
+    <p class="text-sm text-dimmed">{{ t('navigation.loadingRoute') }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { Map as MapLibreMap } from 'maplibre-gl'
 import { Marker } from 'maplibre-gl'
-import type { LatLng } from '#shared/entities/routing'
+import type { LatLng, SavedRouteDetail } from '#shared/entities/routing'
 import { bearingDegrees, computeRouteProgress } from '#shared/entities/routing'
 import { MapCanvas } from '~/entities/map'
 import { useRouteLayer } from '~/entities/route'
 import { useActiveNavigationRoute, useLiveLocation } from '~/features/route/navigate'
 
 const ARRIVAL_THRESHOLD_METERS = 25
-const FOLLOW_ZOOM = 17
+const FOLLOW_ZOOM = 18
 const FOLLOW_PITCH = 60
 
 const { t } = useI18n()
-const { activeRoute, clear } = useActiveNavigationRoute()
+const urlRoute = useRoute()
+const { activeRoute, set, clear } = useActiveNavigationRoute()
 const { location, error: locationError, start, stop } = useLiveLocation()
 
 const map = shallowRef<MapLibreMap>()
 const following = ref(true)
 const noHover = ref<LatLng | null>(null)
 const selectedIndex = ref(0)
+const resolving = ref(!activeRoute.value)
 
 const path = computed(() => activeRoute.value?.route.path ?? [])
 const routes = computed(() => (activeRoute.value ? [activeRoute.value.route] : []))
@@ -194,6 +202,36 @@ const onStop = async () => {
   await navigateTo('/')
 }
 
-onMounted(start)
+// A routeId query param makes /navigate shareable/bookmarkable: a fresh
+// visit has no in-memory active route (the page guard already confirmed the
+// id is there), so fetch it here rather than duplicating the fetch in
+// middleware, where SSR's cross-await Nuxt context makes it unreliable.
+const resolveFromRouteId = async () => {
+  const routeId = urlRoute.query.routeId
+  if (typeof routeId !== 'string') {
+    await navigateTo('/')
+    return
+  }
+
+  try {
+    const detail = await $fetch<SavedRouteDetail>(`/api/routing/saved-routes/${routeId}`)
+    set({
+      route: detail.route,
+      originLabel: detail.originLabel,
+      destinationLabel: detail.destinationLabel,
+    })
+  } catch {
+    // Let `/` retry the same fetch and show its existing "could not load
+    // this route" error, rather than duplicating that handling here.
+    await navigateTo({ path: '/', query: { routeId } })
+  } finally {
+    resolving.value = false
+  }
+}
+
+onMounted(async () => {
+  if (!activeRoute.value) await resolveFromRouteId()
+  if (activeRoute.value) start()
+})
 onScopeDispose(() => liveMarker?.remove())
 </script>

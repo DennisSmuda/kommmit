@@ -48,7 +48,15 @@
       color="neutral"
       variant="soft"
       icon="i-lucide-navigation"
-      @click="emit('navigate', detail.route, detail.originLabel, detail.destinationLabel)"
+      @click="
+        emit(
+          'navigate',
+          detail.route,
+          detail.originLabel,
+          detail.destinationLabel,
+          detail.id,
+        )
+      "
     >
       {{ t('routing.navigate') }}
     </UButton>
@@ -65,7 +73,12 @@ const props = defineProps<{ detail: SavedRouteDetail }>()
 const emit = defineEmits<{
   hover: [point: LatLng | null]
   reset: []
-  navigate: [route: RouteResult, originLabel: string, destinationLabel: string]
+  navigate: [
+    route: RouteResult,
+    originLabel: string,
+    destinationLabel: string,
+    savedRouteId: string,
+  ]
 }>()
 
 const { t } = useI18n()

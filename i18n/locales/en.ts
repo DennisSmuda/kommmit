@@ -56,6 +56,7 @@ export default {
     saveDialogCancel: 'Cancel',
   },
   navigation: {
+    loadingRoute: 'Loading route…',
     locating: 'Getting your location…',
     arrived: "You've arrived",
     finish: 'Finish',

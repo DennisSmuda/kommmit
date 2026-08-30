@@ -107,9 +107,14 @@ const onNavigate = async (
   route: RouteResult,
   originLabel: string,
   destinationLabel: string,
+  savedRouteId?: string,
 ) => {
   setActiveNavigationRoute({ route, originLabel, destinationLabel })
-  await navigateTo('/navigate')
+  // A saved route's id makes the destination shareable/bookmarkable — /navigate
+  // can refetch it from scratch. A live search result has no such id.
+  await navigateTo(
+    savedRouteId ? { path: '/navigate', query: { routeId: savedRouteId } } : '/navigate',
+  )
 }
 
 const onReset = async () => {

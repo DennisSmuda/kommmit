@@ -35,6 +35,7 @@
         :detail="savedRoute"
         @hover="(point) => (hoverPoint = point)"
         @reset="onReset"
+        @navigate="onNavigate"
       />
       <FindRouteForm
         v-else
@@ -46,6 +47,7 @@
         @select="(i) => (selectedIndex = i)"
         @hover="(point) => (hoverPoint = point)"
         @reset="onReset"
+        @navigate="onNavigate"
       />
     </div>
   </div>
@@ -53,12 +55,13 @@
 
 <script setup lang="ts">
 import type { Map as MapLibreMap } from 'maplibre-gl'
-import type { LatLng, RouteRequestPoint } from '#shared/entities/routing'
+import type { LatLng, RouteRequestPoint, RouteResult } from '#shared/entities/routing'
 import { useRouteLayer } from '~/entities/route'
 import { MapCanvas } from '~/entities/map'
 import { FindRouteForm, useFindRoute } from '~/features/route/find-route'
 import { SignOutButton } from '~/features/user/sign-out'
 import { useViewSavedRoute, ViewSavedRoute } from '~/features/route/view-saved-route'
+import { useActiveNavigationRoute } from '~/features/route/navigate'
 
 const { t } = useI18n()
 const urlRoute = useRoute()
@@ -79,6 +82,7 @@ const {
   error: savedRouteError,
 } = useViewSavedRoute()
 const hoverPoint = ref<LatLng | null>(null)
+const { set: setActiveNavigationRoute } = useActiveNavigationRoute()
 
 const combinedError = computed(() => error.value || savedRouteError.value)
 const mapRoutes = computed(() =>
@@ -97,6 +101,15 @@ const { fitToRoutes } = useRouteLayer(
 const onSubmit = async (origin: RouteRequestPoint, destination: RouteRequestPoint) => {
   await submit(origin, destination)
   if (searchRoutes.value.length > 0) fitToRoutes()
+}
+
+const onNavigate = async (
+  route: RouteResult,
+  originLabel: string,
+  destinationLabel: string,
+) => {
+  setActiveNavigationRoute({ route, originLabel, destinationLabel })
+  await navigateTo('/navigate')
 }
 
 const onReset = async () => {

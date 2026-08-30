@@ -123,8 +123,9 @@
           size="lg"
           color="neutral"
           variant="soft"
-          disabled
+          icon="i-lucide-navigation"
           class="flex-1"
+          @click="emit('navigate', selectedRoute, originLabel, destinationLabel)"
         >
           {{ t('routing.navigate') }}
         </UButton>
@@ -165,6 +166,7 @@ const emit = defineEmits<{
   select: [index: number]
   hover: [point: LatLng | null]
   reset: []
+  navigate: [route: RouteResult, originLabel: string, destinationLabel: string]
 }>()
 
 const { t } = useI18n()

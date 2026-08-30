@@ -16,3 +16,6 @@ export type {
   SavedRouteDetail,
 } from './types'
 export { isLatLng, isRoutePoint } from './point'
+export { haversineMeters, bearingDegrees } from './geo'
+export { computeRouteProgress } from './progress'
+export type { RouteProgress } from './progress'

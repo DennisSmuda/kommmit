@@ -6,6 +6,7 @@ export default {
       atmosphereSignIn: 'Signing In',
       atmosphereRegister: 'Finish Signing Up',
       routes: 'My Routes',
+      navigate: 'Navigate',
     },
   },
   common: {
@@ -54,6 +55,13 @@ export default {
     saveDialogNamePlaceholder: 'e.g. Commute, Way to Max',
     saveDialogCancel: 'Cancel',
   },
+  navigation: {
+    locating: 'Getting your location…',
+    arrived: "You've arrived",
+    finish: 'Finish',
+    stop: 'Stop navigation',
+    recenter: 'Recenter',
+  },
   savedRoutes: {
     title: 'My Routes',
     empty: 'No saved routes yet',
@@ -89,6 +97,10 @@ export default {
     noRouteFound: 'No bike-friendly route could be found between those points',
     routePointsRequired: 'A start and end point are required',
     elevationUnavailable: 'Elevation data is unavailable right now.',
+    geolocationDenied:
+      'Location access is needed to navigate. Please allow it and try again.',
+    geolocationUnavailable: 'Could not determine your location right now.',
+    geolocationUnsupported: 'Your browser does not support live location.',
     saveRouteInvalid: 'A route to save is required',
     saveRouteFailed: 'Could not save this route. Please try again.',
     loadSavedRoutesFailed: 'Could not load your saved routes. Please try again.',

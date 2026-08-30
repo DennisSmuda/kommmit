@@ -47,7 +47,8 @@
       size="lg"
       color="neutral"
       variant="soft"
-      disabled
+      icon="i-lucide-navigation"
+      @click="emit('navigate', detail.route, detail.originLabel, detail.destinationLabel)"
     >
       {{ t('routing.navigate') }}
     </UButton>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LatLng, SavedRouteDetail } from '#shared/entities/routing'
+import type { LatLng, RouteResult, SavedRouteDetail } from '#shared/entities/routing'
 import { ElevationChart } from '~/entities/route'
 import { useElevationProfile } from '~/features/route/find-route'
 
@@ -64,6 +65,7 @@ const props = defineProps<{ detail: SavedRouteDetail }>()
 const emit = defineEmits<{
   hover: [point: LatLng | null]
   reset: []
+  navigate: [route: RouteResult, originLabel: string, destinationLabel: string]
 }>()
 
 const { t } = useI18n()

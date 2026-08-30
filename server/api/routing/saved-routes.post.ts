@@ -17,8 +17,10 @@ function isNonEmptyString(value: unknown, maxLength: number): value is string {
 
 function isSaveRouteRequest(body: unknown): body is SaveRouteRequest {
   if (typeof body !== 'object' || body === null) return false
-  const { name, originLabel, destinationLabel, route, elevationProfile } =
-    body as Record<string, unknown>
+  const { name, originLabel, destinationLabel, route, elevationProfile } = body as Record<
+    string,
+    unknown
+  >
 
   if (!isNonEmptyString(name, MAX_NAME_LENGTH)) return false
   if (!isNonEmptyString(originLabel, MAX_NAME_LENGTH)) return false

@@ -14,6 +14,7 @@ against the recommended route. It can come back identical or near-identical
 to route 0 and still get shown as a separate option.
 
 Possible fixes, not done yet:
+
 - surface a reason code (`elevation_unavailable`, `graph_too_large`,
   `no_path`) instead of silently dropping the option
 - apply the same overlap dedup used for alternates, or drop `flattest` when

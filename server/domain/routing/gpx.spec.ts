@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { routeToGpx } from './gpx'
+import { gpxToPath, routeToGpx } from './gpx'
 
 const samples = [
   { lat: 52.5, lng: 13.4, distanceMeters: 0, elevationMeters: 34.1 },
@@ -21,5 +21,22 @@ describe('routeToGpx', () => {
     const gpx = routeToGpx({ name: 'A & B <ride>', kind: 'flattest', samples })
 
     expect(gpx).toContain('<name>A &amp; B &lt;ride&gt;</name>')
+  })
+})
+
+describe('gpxToPath', () => {
+  it('recovers lat/lng for each trkpt', () => {
+    const gpx = routeToGpx({ name: 'A to B', kind: 'recommended', samples })
+
+    expect(gpxToPath(gpx)).toEqual([
+      { lat: 52.5, lng: 13.4 },
+      { lat: 52.51, lng: 13.41 },
+    ])
+  })
+
+  it('returns an empty array for GPX with no trkpts', () => {
+    expect(
+      gpxToPath(routeToGpx({ name: 'Empty', kind: 'recommended', samples: [] })),
+    ).toEqual([])
   })
 })

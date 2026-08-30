@@ -59,6 +59,7 @@ export default {
     empty: 'No saved routes yet',
     backToMap: 'Back to map',
     savedOn: 'Saved {date}',
+    view: 'View',
     exportGpx: 'Export GPX',
   },
   validation: {
@@ -91,5 +92,6 @@ export default {
     saveRouteInvalid: 'A route to save is required',
     saveRouteFailed: 'Could not save this route. Please try again.',
     loadSavedRoutesFailed: 'Could not load your saved routes. Please try again.',
+    loadSavedRouteFailed: 'Could not load this route. Please try again.',
   },
 }

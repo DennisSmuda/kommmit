@@ -62,7 +62,7 @@ async function fetchElevationBatch(points: ElevationPoint[]): Promise<number[]> 
  * to stay polite to a free shared service. Cached per-point across calls.
  */
 export async function fetchElevations(points: ElevationPoint[]): Promise<number[]> {
-  const results = new Array<number>(points.length)
+  const results = Array.from({ length: points.length })
   const misses: { point: ElevationPoint; index: number }[] = []
 
   points.forEach((point, index) => {

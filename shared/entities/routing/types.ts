@@ -80,3 +80,11 @@ export interface SavedRouteSummary {
 export interface ListSavedRoutesResult {
   routes: SavedRouteSummary[]
 }
+
+export interface SavedRouteDetail {
+  id: string
+  name: string
+  originLabel: string
+  destinationLabel: string
+  route: RouteResult
+}

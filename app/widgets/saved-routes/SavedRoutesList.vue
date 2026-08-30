@@ -82,7 +82,16 @@
               </p>
             </div>
           </div>
-          <div class="mt-3 flex justify-end border-t border-default pt-3">
+          <div class="mt-3 flex justify-end gap-2 border-t border-default pt-3">
+            <UButton
+              :to="{ path: '/', query: { routeId: route.id } }"
+              variant="ghost"
+              color="neutral"
+              size="xs"
+              icon="i-lucide-map"
+            >
+              {{ t('savedRoutes.view') }}
+            </UButton>
             <UButton
               :href="`/api/routing/saved-routes/${route.id}/gpx`"
               external

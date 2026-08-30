@@ -212,7 +212,9 @@ const hasDestination = computed(() =>
   Boolean(destinationSelected.value || destinationQuery.value.trim()),
 )
 
-const originLabel = computed(() => originSelected.value?.label ?? originQuery.value.trim())
+const originLabel = computed(
+  () => originSelected.value?.label ?? originQuery.value.trim(),
+)
 const destinationLabel = computed(
   () => destinationSelected.value?.label ?? destinationQuery.value.trim(),
 )

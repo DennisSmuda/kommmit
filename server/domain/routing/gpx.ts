@@ -1,4 +1,4 @@
-import type { ElevationSample, RouteKind } from '#shared/entities/routing'
+import type { ElevationSample, LatLng, RouteKind } from '#shared/entities/routing'
 
 function escapeXml(value: string): string {
   return value
@@ -38,4 +38,19 @@ ${trkpts}
     </trkseg>
   </trk>
 </gpx>`
+}
+
+const TRKPT_REGEX = /<trkpt lat="([^"]+)" lon="([^"]+)">/g
+
+/**
+ * Recovers the path from GPX emitted by `routeToGpx` — lat/lon only, no
+ * elevation. The trkpts are the elevation profile's resampled points, not
+ * the original routing path, but that's what viewing a saved route needs:
+ * the elevation is refetched for this path anyway (see useElevationProfile).
+ */
+export function gpxToPath(gpx: string): LatLng[] {
+  return [...gpx.matchAll(TRKPT_REGEX)].map(([, lat, lon]) => ({
+    lat: Number(lat),
+    lng: Number(lon),
+  }))
 }

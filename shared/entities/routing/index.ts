@@ -13,5 +13,6 @@ export type {
   SaveRouteResult,
   SavedRouteSummary,
   ListSavedRoutesResult,
+  SavedRouteDetail,
 } from './types'
 export { isLatLng, isRoutePoint } from './point'

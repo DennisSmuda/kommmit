@@ -25,6 +25,40 @@ const AVERAGE_BIKE_SPEED_MPS = 4.2
 // The primary recommendation plus up to two genuinely distinct alternates.
 const MAX_ROUTES = 3
 
+// Same origin/destination shouldn't re-hit Overpass + Open-Elevation and
+// rebuild the graph every time — cache the full search result for a while.
+// TTL, not permanent: OSM data and the underlying road network do change.
+const ROUTE_CACHE_TTL_MS = 15 * 60_000
+// ~1.1m grid — coarser than realistic address-resolution precision, so this
+// still dedups repeat searches for "the same place" typed slightly differently.
+const CACHE_COORD_PRECISION = 5
+
+interface RouteCacheEntry {
+  result: RouteSearchResult
+  expiresAt: number
+}
+
+const routeCache = new Map<string, RouteCacheEntry>()
+
+function routeCacheKey(origin: LatLng, destination: LatLng): string {
+  const round = (p: LatLng) => `${p.lat.toFixed(CACHE_COORD_PRECISION)},${p.lng.toFixed(CACHE_COORD_PRECISION)}`
+  return `${round(origin)}->${round(destination)}`
+}
+
+/** Sweeps expired entries every Nth write rather than on a timer, so cost scales with load. */
+const SWEEP_EVERY = 50
+let writesSinceSweep = 0
+
+function sweepRouteCache() {
+  if (++writesSinceSweep < SWEEP_EVERY) return
+  writesSinceSweep = 0
+
+  const now = Date.now()
+  for (const [key, entry] of routeCache) {
+    if (entry.expiresAt <= now) routeCache.delete(key)
+  }
+}
+
 async function resolvePoint(point: LatLng | string): Promise<LatLng> {
   if (isLatLng(point)) return point
 
@@ -55,6 +89,10 @@ function toRouteResult(graph: Graph, path: number[]): Omit<RouteResult, 'kind'> 
 export async function findRoute(request: RouteRequest): Promise<RouteSearchResult> {
   const origin = await resolvePoint(request.origin)
   const destination = await resolvePoint(request.destination)
+
+  const cacheKey = routeCacheKey(origin, destination)
+  const cached = routeCache.get(cacheKey)
+  if (cached && cached.expiresAt > Date.now()) return cached.result
 
   if (haversineMeters(origin, destination) > MAX_STRAIGHT_LINE_DISTANCE_M) {
     throw createError({ statusCode: 400, statusMessage: 'errors.routeTooFar' })
@@ -116,5 +154,8 @@ export async function findRoute(request: RouteRequest): Promise<RouteSearchResul
     routes.push({ kind: 'flattest', ...toRouteResult(graph, flattestPath) })
   }
 
-  return { routes }
+  const result: RouteSearchResult = { routes }
+  sweepRouteCache()
+  routeCache.set(cacheKey, { result, expiresAt: Date.now() + ROUTE_CACHE_TTL_MS })
+  return result
 }

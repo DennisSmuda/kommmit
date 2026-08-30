@@ -34,5 +34,11 @@ export function useFindRoute() {
     }
   }
 
-  return { routes, selectedIndex, selectedRoute, pending, error, submit }
+  const reset = () => {
+    routes.value = []
+    selectedIndex.value = 0
+    error.value = ''
+  }
+
+  return { routes, selectedIndex, selectedRoute, pending, error, submit, reset }
 }

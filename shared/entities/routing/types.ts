@@ -49,3 +49,13 @@ export interface ElevationProfile {
   minElevationMeters: number
   maxElevationMeters: number
 }
+
+export interface SaveRouteRequest {
+  name: string
+  route: Pick<RouteResult, 'kind' | 'distanceMeters' | 'durationSeconds'>
+  elevationProfile: ElevationProfile
+}
+
+export interface SaveRouteResult {
+  id: string
+}

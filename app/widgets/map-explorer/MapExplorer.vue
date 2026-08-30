@@ -28,6 +28,7 @@
         @submit="onSubmit"
         @select="(i) => (selectedIndex = i)"
         @hover="(point) => (hoverPoint = point)"
+        @reset="onReset"
       />
     </div>
   </div>
@@ -44,7 +45,7 @@ import { SignOutButton } from '~/features/user/sign-out'
 const { t } = useI18n()
 
 const map = shallowRef<MapLibreMap>()
-const { routes, selectedIndex, pending, error, submit } = useFindRoute()
+const { routes, selectedIndex, pending, error, submit, reset } = useFindRoute()
 const hoverPoint = ref<LatLng | null>(null)
 const { fitToRoutes } = useRouteLayer(
   map,
@@ -57,5 +58,10 @@ const { fitToRoutes } = useRouteLayer(
 const onSubmit = async (origin: RouteRequestPoint, destination: RouteRequestPoint) => {
   await submit(origin, destination)
   if (routes.value.length > 0) fitToRoutes()
+}
+
+const onReset = () => {
+  reset()
+  hoverPoint.value = null
 }
 </script>

@@ -22,6 +22,23 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
+  savedRoutes     SavedRoute[]
+}
+
+// A route a user chose to keep, stored as GPX so a future export endpoint
+// just serves `gpx` back verbatim. `name`/`kind`/`distanceMeters`/
+// `durationSeconds` are duplicated out as columns so a future list view
+// doesn't need to parse XML to render itself.
+model SavedRoute {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  kind            String
+  distanceMeters  Float
+  durationSeconds Float
+  gpx             String
+  createdAt       DateTime @default(now())
 }
 
 // Backing for the two key/value stores `@atproto/oauth-client-node` requires.

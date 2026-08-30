@@ -31,6 +31,8 @@ export function edgeWeightWithClimb(
  * their roads, since it's optimizing for a different thing entirely.
  * Returns null (never throws) on any failure: this is an enhancement on top
  * of routing that already succeeded, not something that should break it.
+ * Failure is silent to the caller and there's no dedup against the
+ * recommended route — see TECH_DEBT.md.
  */
 export async function findFlattestPath(
   graph: Graph,

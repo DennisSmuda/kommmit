@@ -2,3 +2,4 @@
 export { findRoute } from './find-route'
 export { searchAddress } from './geocode'
 export { elevationProfile } from './elevation'
+export { routeToGpx, gpxToPath } from './gpx'

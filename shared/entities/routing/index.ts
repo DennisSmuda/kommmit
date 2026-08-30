@@ -9,5 +9,10 @@ export type {
   GeocodeCandidate,
   ElevationSample,
   ElevationProfile,
+  SaveRouteRequest,
+  SaveRouteResult,
+  SavedRouteSummary,
+  ListSavedRoutesResult,
+  SavedRouteDetail,
 } from './types'
 export { isLatLng, isRoutePoint } from './point'

@@ -41,7 +41,8 @@ interface RouteCacheEntry {
 const routeCache = new Map<string, RouteCacheEntry>()
 
 function routeCacheKey(origin: LatLng, destination: LatLng): string {
-  const round = (p: LatLng) => `${p.lat.toFixed(CACHE_COORD_PRECISION)},${p.lng.toFixed(CACHE_COORD_PRECISION)}`
+  const round = (p: LatLng) =>
+    `${p.lat.toFixed(CACHE_COORD_PRECISION)},${p.lng.toFixed(CACHE_COORD_PRECISION)}`
   return `${round(origin)}->${round(destination)}`
 }
 

@@ -118,7 +118,7 @@ export function clientMetadata() {
 
 function baseMetadata(redirectUri: string) {
   return {
-    client_name: 'kommmit',
+    client_name: 'Arschwasser',
     redirect_uris: [redirectUri] as [string],
     scope: SCOPE,
     grant_types: ['authorization_code', 'refresh_token'] as [

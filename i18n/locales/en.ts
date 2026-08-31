@@ -1,7 +1,7 @@
 export default {
   meta: {
     title: {
-      home: 'Home',
+      home: 'Explore',
       login: 'Log In',
       atmosphereSignIn: 'Signing In',
       atmosphereRegister: 'Finish Signing Up',

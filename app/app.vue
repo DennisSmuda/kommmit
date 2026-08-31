@@ -4,7 +4,7 @@ import * as locales from '@nuxt/ui/locale'
 const { locale } = useI18n()
 
 useHead({
-  titleTemplate: (title) => (title ? `${title} · kommmit` : 'kommmit'),
+  titleTemplate: (title) => (title ? `${title} · Arschwasser` : 'Arschwasser'),
 })
 </script>
 

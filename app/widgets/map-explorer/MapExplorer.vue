@@ -7,11 +7,6 @@
     <header
       class="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4"
     >
-      <p
-        class="pointer-events-auto rounded-lg bg-default/90 backdrop-blur px-3 py-1.5 shadow font-display text-xl font-bold tracking-tight text-highlighted"
-      >
-        {{ t('meta.title.home') }}
-      </p>
       <div
         class="pointer-events-auto flex items-center gap-2 rounded-lg bg-default/90 backdrop-blur shadow"
       >

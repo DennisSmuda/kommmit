@@ -60,25 +60,23 @@ export default defineNuxtConfig({
     plugins: [
       {
         // The exclude above only fixes dev, where Vite serves node_modules
-        // files on request. maplibre-gl resolves its worker via a *dynamic*
-        // `./${name}.mjs` URL, which Rollup's static asset analysis can't
-        // see, so the production build never emits it and it 404s at
-        // /_nuxt/maplibre-gl-worker.mjs. Emit it manually at that path.
+        // files on request. maplibre-gl resolves its worker, and the worker's
+        // own import of its shared chunk, via *dynamic* `./${name}.mjs` URLs
+        // that Rollup's static asset analysis can't see, so the production
+        // build never emits either file and both 404 under /_nuxt/. Emit
+        // them manually at the paths the runtime requests.
         name: 'maplibre-gl-worker-copy',
         apply: 'build',
         generateBundle() {
-          this.emitFile({
-            type: 'asset',
-            fileName: '_nuxt/maplibre-gl-worker.mjs',
-            source: readFileSync(
-              fileURLToPath(
-                new URL(
-                  './node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs',
-                  import.meta.url,
-                ),
+          for (const file of ['maplibre-gl-worker.mjs', 'maplibre-gl-shared.mjs']) {
+            this.emitFile({
+              type: 'asset',
+              fileName: `_nuxt/${file}`,
+              source: readFileSync(
+                fileURLToPath(new URL(`./node_modules/maplibre-gl/dist/${file}`, import.meta.url)),
               ),
-            ),
-          })
+            })
+          }
         },
       },
     ],
